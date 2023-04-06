@@ -1,7 +1,6 @@
 const { expect } = require("chai");
 const { network, ethers } = require("hardhat");
 const { BigNumber, utils }  = require("ethers");
-const { writeFile } = require('fs');
 
 describe("Liquidation", function () {
   it("test", async function () {
@@ -16,7 +15,7 @@ describe("Liquidation", function () {
       });
     
     const gasPrice = 0;
-
+    const usdt = ethers.utils.parseUnits('5000', 6);
     const accounts = await ethers.getSigners();
     const liquidator = accounts[0].address;
 
@@ -29,7 +28,7 @@ describe("Liquidation", function () {
     const liquidationOperator = await LiquidationOperator.deploy(overrides = {gasPrice: gasPrice});
     await liquidationOperator.deployed();
 
-    const liquidationTx = await liquidationOperator.operate(overrides = {gasPrice: gasPrice});
+    const liquidationTx = await liquidationOperator.operate(usdt, overrides = {gasPrice: gasPrice});
     const liquidationReceipt = await liquidationTx.wait();
 
     const liquidationEvents = liquidationReceipt.logs.filter(
@@ -47,9 +46,9 @@ describe("Liquidation", function () {
     }));
 
     const profit = afterLiquidationBalance.sub(beforeLiquidationBalance);
+    console.log("2000 USDT");
     console.log("Profit", utils.formatEther(profit), "ETH");
 
     expect(profit.gt(BigNumber.from(0)), "not profitable").to.be.true;
-    writeFile('profit.txt', String(utils.formatEther(profit)), function (err) {console.log("failed to write profit.txt: %s", err)});
   });
 });
