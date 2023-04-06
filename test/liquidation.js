@@ -15,7 +15,7 @@ describe("Liquidation", function () {
       });
     
     const gasPrice = 0;
-    const usdt = ethers.utils.parseUnits('5000', 6);
+    const usdt = ethers.utils.parseUnits('10000', 6);
     const accounts = await ethers.getSigners();
     const liquidator = accounts[0].address;
 
@@ -46,7 +46,7 @@ describe("Liquidation", function () {
     }));
 
     const profit = afterLiquidationBalance.sub(beforeLiquidationBalance);
-    console.log("2000 USDT");
+    console.log("10000 USDT");
     console.log("Profit", utils.formatEther(profit), "ETH");
 
     expect(profit.gt(BigNumber.from(0)), "not profitable").to.be.true;
