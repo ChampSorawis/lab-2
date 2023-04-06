@@ -9,13 +9,13 @@ describe("Liquidation", function () {
         params: [{
           forking: {
             jsonRpcUrl: process.env.ALCHE_API,
-            blockNumber: 12489619,
+            blockNumber: 11946807,
           }
         }]
       });
     
     const gasPrice = 0;
-    const usdt = ethers.utils.parseUnits('10000', 6);
+    const usdt = ethers.utils.parseUnits('8128.956342', 6);
     const accounts = await ethers.getSigners();
     const liquidator = accounts[0].address;
 
@@ -35,7 +35,8 @@ describe("Liquidation", function () {
         v => v && v.topics && v.address === '0x7d2768dE32b0b80b7a3454c06BdAc94A69DDc7A9' && Array.isArray(v.topics) && 
         v.topics.length > 3 && v.topics[0] === '0xe413a321e8681d831f4dbccbca790d2952b56f977908e45be37335533e005286')
 
-    const expectedLiquidationEvents = liquidationReceipt.logs.filter(v => v.topics[3] === '0x00000000000000000000000059ce4a2ac5bc3f5f225439b2993b86b42f6d3e9f');
+    const liq = '0x00000000000000000000000063f6037d3e9d51ad865056BF7792029803b6eEfD';
+    const expectedLiquidationEvents = liquidationReceipt.logs.filter(v => v.topics[3] === liq.toLowerCase());
 
     expect(expectedLiquidationEvents.length, "no expected liquidation").to.be.above(0);
     expect(liquidationEvents.length, "unexpected liquidation").to.be.equal(expectedLiquidationEvents.length);
@@ -46,7 +47,7 @@ describe("Liquidation", function () {
     }));
 
     const profit = afterLiquidationBalance.sub(beforeLiquidationBalance);
-    console.log("10000 USDT");
+    console.log("8128.956342 USDT");
     console.log("Profit", utils.formatEther(profit), "ETH");
 
     expect(profit.gt(BigNumber.from(0)), "not profitable").to.be.true;
